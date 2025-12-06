@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Gerenciamento de Eventos</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Dashboard - Gerenciamento de Eventos</h1>
+        <h2>1. Dashboard em Java → interface gráfica que combina dados de PostgreSQL, MongoDB e Neo4j</h2>
+
+        <!-- Resumo Geral -->
+        <section class="summary">
+            <div class="card">
+                <h3>PostgreSQL</h3>
+                <p><strong>Pessoas:</strong> {{totalPessoasPostgres}}</p>
+                <p><strong>Eventos:</strong> {{totalEventosPostgres}}</p>
+            </div>
+            <div class="card">
+                <h3>MongoDB</h3>
+                <p><strong>Pessoas:</strong> {{totalPessoasMongo}}</p>
+                <p><strong>Eventos:</strong> {{totalEventosMongo}}</p>
+            </div>
+            <div class="card">
+                <h3>Neo4j</h3>
+                <p><strong>Relacionamentos:</strong> {{totalRelacionamentos}}</p>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- Dados do Neo4j -->
+        <section>
+            <h2>2. Neo4j: Quem participou do evento como ouvinte/participante e como organizador</h2>
+            
+            <h3>Participações e Organizações de Eventos</h3>
+            <ul>
+                {{#relacionamentosNeo4j}}
+                <li>
+                    <strong>{{pessoaNome}}</strong> é 
+                    <span class="badge {{#tipo}}{{tipo}}{{/tipo}}">{{tipo}}</span> 
+                    do evento <strong>{{eventoNome}}</strong>
+                </li>
+                {{/relacionamentosNeo4j}}
+                {{^relacionamentosNeo4j}}
+                <li><em>Nenhum relacionamento registrado no Neo4j</em></li>
+                {{/relacionamentosNeo4j}}
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. Migrar um participante para organizador em Neo4j de um determinado evento</h2>
+            <ul>
+                <li><strong>Migração realizada:</strong> {{migracaoRealizada}}</li>
+            </ul>
+        </section>
+
+
+        <!-- Filtros Dinâmicos -->
+        <section>
+            <h2>4. Filtros dinâmicos em MongoDB → eventos por local, data ou palavra-chave.</h2>
+
+            <h3>Eventos agrupados por local</h3>
+            {{#eventosPorLocal}}
+            <div style="margin-bottom: 20px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                <h4 style="color: #b794f4; margin-top: 0;">Local: {{key}}</h4>
+                <ul>
+                    {{#value}}
+                    <li>
+                        <strong>{{nome}}</strong> — 
+                        Data: {{dataHora}}
+                    </li>
+                    {{/value}}
+                    {{^value}}
+                    <li><em>Nenhum evento neste local</em></li>
+                    {{/value}}
+                </ul>
+            </div>
+            {{/eventosPorLocal}}
+            
+            {{^eventosPorLocal}}
+            <p><em>Nenhum evento encontrado no MongoDB</em></p>
+            {{/eventosPorLocal}}
+        </section>
+
+        <!-- Exportar JSON -->
+        <section>
+            <h2>5. Exportação JSON → integração com sistemas externos.</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 20px;">
+                <a href="/api/export/all" download="todos_dados.json" class="btn-export">
+                    <span style="font-size: 1.5em;">⬇️</span>
+                    <span>Todos os dados</span>
+                </a>
+                
+                <a href="/api/export/postgresql" download="postgresql.json" class="btn-export">
+                    <span style="font-size: 1.5em;">⬇️</span>
+                    <span>PostgreSQL</span>
+                </a>
+                
+                <a href="/api/export/mongodb" download="mongodb.json" class="btn-export">
+                    <span style="font-size: 1.5em;">⬇️</span>
+                    <span>MongoDB</span>
+                </a>
+                
+                <a href="/api/export/neo4j" download="neo4j.json" class="btn-export">
+                    <span style="font-size: 1.5em;">⬇️</span>
+                    <span>Neo4j</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Exportar SQL -->
+        <section>
+            <h2>6. Exportação SQL, JS e Cypher.</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px;">
+                <a href="/api/export/sql/postgresql" download="postgresql_export.sql" class="btn-export">
+                    <span style="font-size: 1.5em;">⬇️</span>
+                    <span>PostgreSQL (SQL)</span>
+                </a>
+                
+                <a href="/api/export/sql/mongodb" download="mongodb_export.js" class="btn-export">
+                    <span style="font-size: 1.5em;">⬇️</span>
+                    <span>MongoDB (JS)</span>
+                </a>
+                
+                <a href="/api/export/sql/neo4j" download="neo4j_export.cypher" class="btn-export">
+                    <span style="font-size: 1.5em;">⬇️</span>
+                    <span>Neo4j (Cypher)</span>
+                </a>
+            </div>
+        </section>
+    </div>
+
+<footer>
+    <p>Tópicos em Banco de Dados - Trabalho 02 | Dashboard Multi-Banco</p>
+</footer>
+
+</body>
+
+</html>
